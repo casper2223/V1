@@ -1,0 +1,48 @@
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url)
+  const filmUrl = url.searchParams.get('p')
+
+  if (!filmUrl) {
+    return new Response('Parameter "p" tidak ditemukan. Contoh penggunaan: ?p=https://example.com/film', {
+      headers: { 'Content-Type': 'text/plain' },
+    })
+  }
+
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nonton Film Terbaru 2025</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe src="${filmUrl}" allowfullscreen></iframe>
+</body>
+</html>
+`
+
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html' },
+  })
+}
